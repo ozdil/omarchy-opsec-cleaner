@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+python3 -c "
+import os, json, glob
+
+# Check Downloads for uncleaned images
+dl_dir = os.path.expanduser('~/Downloads')
+pics_dir = os.path.expanduser('~/Pictures')
+
+found_unclean = 0
+for d in [dl_dir, pics_dir]:
+    if os.path.exists(d):
+        for f in glob.glob(d + '/*.jpg') + glob.glob(d + '/*.png') + glob.glob(d + '/*.jpeg'):
+            if '_clean' not in f:
+                found_unclean += 1
+
+tooltip = '🔒 OpSec Cleaner • Dijital Parmak İzi Temizleyici\n• Fotoğraf ve belgelerden EXIF/GPS/Kamera verilerini temizler.\n\n[Sol Tık] Dosya Seç ve Metadata Temizle'
+
+print(json.dumps({
+    'text': '󰈤 OpSec',
+    'tooltip': tooltip,
+    'class': 'active'
+}))
+"

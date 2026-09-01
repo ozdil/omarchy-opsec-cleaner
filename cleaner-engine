@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+import os
+import sys
+import hashlib
+from PIL import Image
+
+def get_file_metadata(filepath):
+    meta = {}
+    try:
+        with Image.open(filepath) as img:
+            exif = img.getexif()
+            if exif:
+                for k, v in exif.items():
+                    meta[str(k)] = str(v)
+    except Exception:
+        pass
+    return meta
+
+def sanitize_image(filepath, output_path=None):
+    if output_path is None:
+        base, ext = os.path.splitext(filepath)
+        output_path = f"{base}_clean{ext}"
+    
+    try:
+        with Image.open(filepath) as img:
+            # Create a clean image without EXIF / metadata
+            data = list(img.getdata())
+            clean_img = Image.new(img.mode, img.size)
+            clean_img.putdata(data)
+            clean_img.save(output_path, quality=95)
+        return output_path, True
+    except Exception as e:
+        return str(e), False
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        target = sys.argv[1]
+        out, ok = sanitize_image(target)
+        if ok:
+            print(f"Cleaned: {out}")
+        else:
+            print(f"Error: {out}")
