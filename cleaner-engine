@@ -3,20 +3,20 @@ import sys
 import os
 import tempfile
 import re
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-MAX_IMAGE_PIXELS = 100_000_000 # Max 100 megapixels to prevent decompression bombs
-MAX_FILE_BYTES = 50 * 1024 * 1024 # Max 50MB file size limit
+MAX_IMAGE_PIXELS = 100_000_000 # Max 100 megapixels
+MAX_FILE_BYTES = 50 * 1024 * 1024 # Max 50MB
 
 def sanitize_name(s):
     return re.sub(r'[\x00-\x1f\x7f-\x9f]', '', str(s))[:60]
 
 def clean_image(input_path):
-    # 1. Verification of regular file
     if not os.path.isfile(input_path) or os.path.islink(input_path):
         print("HATA: Girdi dosyası geçerli bir normal dosya değil veya sembolik bağ.", file=sys.stderr)
         return False
 
-    # 2. Check file size bound
     file_size = os.path.getsize(input_path)
     if file_size > MAX_FILE_BYTES:
         print(f"HATA: Dosya boyutu izin verilen sınırı aşıyor (Maks: 50MB, Dosya: {file_size/1024/1024:.1f}MB).", file=sys.stderr)
@@ -34,29 +34,21 @@ def clean_image(input_path):
         base_name = os.path.basename(input_path)
         name, ext = os.path.splitext(base_name)
         
-        # Open and strip metadata
         with Image.open(input_path) as img:
-            # Respect orientation before stripping EXIF
             img_clean = ImageOps.exif_transpose(img)
             if img_clean is None:
-                img_clean = img.copy()
+                img_clean = img
 
-            # Create pixel-only new image to ensure zero leftover metadata
-            data = list(img_clean.getdata())
-            output_img = Image.new(img_clean.mode, img_clean.size)
-            output_img.putdata(data)
-
-            # Exclusive atomic temporary file in the same directory
+            # Save clean raster image without EXIF/metadata
             with tempfile.NamedTemporaryFile(dir=input_dir, delete=False, suffix=ext) as tf:
                 temp_output_path = tf.name
 
-            output_img.save(temp_output_path, quality=95)
+            # Explicit save without exif/info
+            img_clean.save(temp_output_path, quality=95, exif=b"")
             
-            # fsync to guarantee persistence
             with open(temp_output_path, "rb") as f:
                 os.fsync(f.fileno())
 
-            # Collision-free final target name
             target_path = os.path.join(input_dir, f"{name}_clean{ext}")
             counter = 1
             while os.path.exists(target_path):
