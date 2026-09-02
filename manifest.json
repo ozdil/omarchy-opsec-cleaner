@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "id": "ozdil.opsec-cleaner",
   "name": "OpSec Cleaner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Ozan Özdil (ozdil)",
   "license": "MIT",
-  "description": "Digital privacy & OpSec metadata scrubber for Omarchy. Strips EXIF, GPS coordinates, and camera tracking markers from photos and documents.",
+  "description": "Digital privacy and image EXIF metadata sanitizer for Omarchy.",
   "kinds": ["bar-widget"],
   "activation": "on-demand",
   "entryPoints": {
@@ -13,10 +13,10 @@
   },
   "barWidget": {
     "displayName": "OpSec Cleaner",
-    "description": "Privacy metadata sanitizer and EXIF scrubber.",
+    "description": "Digital privacy and image EXIF metadata sanitizer.",
     "category": "System",
     "defaultSection": "right",
-    "aliases": ["opsec", "metadata", "privacy", "exif", "cleaner"],
+    "aliases": ["opsec", "cleaner", "exif", "privacy", "metadata"],
     "allowMultiple": false
   }
 }

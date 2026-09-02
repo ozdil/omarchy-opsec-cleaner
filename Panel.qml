@@ -16,7 +16,7 @@ Panel {
     bar: root.bar
     text: "󰈤 OpSec"
     slotSize: Style.bar.statusSlot
-    tooltipText: "OpSec Cleaner: Privacy metadata & EXIF sanitizer"
+    tooltipText: "OpSec Cleaner: JPEG/PNG EXIF & privacy sanitizer"
     onPressed: root.toggle()
   }
 
@@ -42,7 +42,7 @@ Panel {
       }
 
       Text {
-        text: "Fotoğraf ve belgelerinizdeki GPS, kamera ve kullanıcı dijital izlerini temizleyin."
+        text: "JPEG ve PNG görsellerinizdeki GPS koordinatlarını, kamera modelini ve kullanıcı dijital izlerini sıfırlayın."
         font.pixelSize: Style.font.body
         color: "#94a3b8"
         wrapMode: Text.WordWrap
@@ -51,10 +51,10 @@ Panel {
 
       Button {
         width: parent.width
-        text: "📁 Dosya Seç ve Temizle"
+        text: "📁 Görsel Seç ve Temizle"
         onClicked: {
           root.close()
-          if (root.bar) root.bar.run("omarchy-launch-floating-terminal-with-presentation $HOME/.config/omarchy/plugins/opsec-cleaner/cleaner-dashboard")
+          if (root.bar) root.bar.run("omarchy-launch-floating-terminal-with-presentation cleaner-dashboard")
         }
       }
     }
