@@ -1,39 +1,13 @@
 #!/usr/bin/env bash
-DIR="$(cd "$(dirname "$(realpath "$0")")" >/dev/null 2>&1 && pwd)"
-clear
-echo -e "\033[1;36m=================================================================\033[0m"
-echo -e "\033[1;33m  🔒 OPSEC CLEANER • Dijital Parmak İzi & EXIF Temizleyici \033[0m"
-echo -e "\033[1;36m=================================================================\033[0m"
-echo ""
-
-FILE_PATH=""
-if command -v zenity &>/dev/null; then
-    FILE_PATH=$(zenity --file-selection --title="Metadata Temizlenecek Görseli Seçin (JPEG/PNG)" 2>/dev/null || true)
-fi
-
-if [ -z "$FILE_PATH" ]; then
-    echo -n "Temizlenecek görselin tam yolunu girin: "
-    read -r FILE_PATH
-    FILE_PATH=$(echo "$FILE_PATH" | tr -d "'\"")
-fi
-
-if [ -n "$FILE_PATH" ] && [ -f "$FILE_PATH" ]; then
-    echo -e "Seçilen dosya: \033[1;34m$(basename "$FILE_PATH")\033[0m"
-    echo "GPS, kamera seri no, çekim zamanı ve EXIF etiketleri sıfırlanıyor..."
+set -euo pipefail
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BIN="${DIR}/opsec-engine"
+if [[ -x "${BIN}" ]]; then
+    clear
+    "${BIN}"
     echo ""
-    
-    # Safe argv invocation of engine (no string interpolation into python3 -c)
-    if "$DIR/cleaner-engine" "$FILE_PATH"; then
-        echo ""
-        echo -e "\033[1;32m✓ Görselin tüm metadata ve dijital parmak izleri başarıyla sıfırlandı!\033[0m"
-    else
-        echo ""
-        echo -e "\033[1;31m❌ Temizleme işlemi başarısız oldu.\033[0m"
-    fi
+    read -r -p "Press Enter to exit..." || true
 else
-    echo -e "\033[1;31mGeçerli bir dosya seçilmedi.\033[0m"
+    echo "Engine binary not found."
+    exit 1
 fi
-
-echo ""
-echo -e "\033[0;90mKapatmak için bir tuşa basın...\033[0m"
-read -n 1 -s -r

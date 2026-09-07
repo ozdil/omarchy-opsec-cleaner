@@ -2,21 +2,15 @@
   "schemaVersion": 1,
   "id": "ozdil.opsec-cleaner",
   "name": "OpSec Cleaner",
-  "version": "1.0.1",
-  "author": "Ozan Özdil (ozdil)",
+  "description": "Digital privacy and OpSec metadata scrubber for Omarchy Linux",
+  "version": "1.1.0",
+  "author": "Ozan Özdil",
   "license": "MIT",
-  "description": "Digital privacy and image EXIF metadata sanitizer for Omarchy.",
   "kinds": ["bar-widget"],
-  "activation": "on-demand",
   "entryPoints": {
     "barWidget": "Panel.qml"
   },
   "barWidget": {
-    "displayName": "OpSec Cleaner",
-    "description": "Digital privacy and image EXIF metadata sanitizer.",
-    "category": "System",
-    "defaultSection": "right",
-    "aliases": ["opsec", "cleaner", "exif", "privacy", "metadata"],
-    "allowMultiple": false
+    "defaultSection": "right"
   }
 }

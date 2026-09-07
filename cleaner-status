@@ -1,2 +1,9 @@
 #!/usr/bin/env bash
-echo '{"text":"󰈤 OpSec","tooltip":"🔒 OpSec Cleaner • Dijital Parmak İzi Sanitizörü\n• JPEG/PNG görsellerindeki GPS, kamera ve kullanıcı izlerini sıfırlar.\n\n[Sol Tık] Görsel Seç ve Temizle","class":"normal"}'
+set -euo pipefail
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BIN="${DIR}/opsec-engine"
+if [[ -x "${BIN}" ]]; then
+    exec "${BIN}" --status
+else
+    echo '{"text":"OPSEC: READY","tooltip":"Ready to scrub metadata","class":"normal"}'
+fi
