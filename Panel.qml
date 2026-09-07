@@ -71,8 +71,8 @@ Panel {
 
   Component.onCompleted: refresh()
   Component.onDestruction: {
-    if (stateProc.running) stateProc.kill()
-    if (cleanProc.running) cleanProc.kill()
+    if (stateProc.running) stateProc.running = false
+    if (cleanProc.running) cleanProc.running = false
   }
 
   WidgetButton {
@@ -170,17 +170,81 @@ Panel {
           columnSpacing: Style.space(16)
           rowSpacing: Style.spacing.labelGap
 
-          InfoLabel { text: "Engine" }
-          DetailValue { text: "Native Rust (x86_64)" }
+          Text {
+            textFormat: Text.PlainText
+            text: "Engine"
+            color: root.bar ? root.bar.foreground : Color.foreground
+            opacity: 0.6
+            font.family: root.bar ? root.bar.fontFamily : Style.font.family
+            font.pixelSize: Style.font.bodySmall
+          }
+          Text {
+            textFormat: Text.PlainText
+            Layout.fillWidth: true
+            horizontalAlignment: Text.AlignRight
+            text: "Native Rust (x86_64)"
+            color: root.bar ? root.bar.foreground : Color.foreground
+            font.family: root.bar ? root.bar.fontFamily : Style.font.family
+            font.pixelSize: Style.font.bodySmall
+            elide: Text.ElideRight
+          }
 
-          InfoLabel { text: "Cleaned Total" }
-          DetailValue { text: String(root.totalCleaned) }
+          Text {
+            textFormat: Text.PlainText
+            text: "Cleaned Total"
+            color: root.bar ? root.bar.foreground : Color.foreground
+            opacity: 0.6
+            font.family: root.bar ? root.bar.fontFamily : Style.font.family
+            font.pixelSize: Style.font.bodySmall
+          }
+          Text {
+            textFormat: Text.PlainText
+            Layout.fillWidth: true
+            horizontalAlignment: Text.AlignRight
+            text: String(root.totalCleaned)
+            color: root.bar ? root.bar.foreground : Color.foreground
+            font.family: root.bar ? root.bar.fontFamily : Style.font.family
+            font.pixelSize: Style.font.bodySmall
+            elide: Text.ElideRight
+          }
 
-          InfoLabel { text: "Method" }
-          DetailValue { text: "Lossless Chunk Strip" }
+          Text {
+            textFormat: Text.PlainText
+            text: "Method"
+            color: root.bar ? root.bar.foreground : Color.foreground
+            opacity: 0.6
+            font.family: root.bar ? root.bar.fontFamily : Style.font.family
+            font.pixelSize: Style.font.bodySmall
+          }
+          Text {
+            textFormat: Text.PlainText
+            Layout.fillWidth: true
+            horizontalAlignment: Text.AlignRight
+            text: "Lossless Chunk Strip"
+            color: root.bar ? root.bar.foreground : Color.foreground
+            font.family: root.bar ? root.bar.fontFamily : Style.font.family
+            font.pixelSize: Style.font.bodySmall
+            elide: Text.ElideRight
+          }
 
-          InfoLabel { text: "Supported" }
-          DetailValue { text: "JPEG, PNG, EXIF" }
+          Text {
+            textFormat: Text.PlainText
+            text: "Supported"
+            color: root.bar ? root.bar.foreground : Color.foreground
+            opacity: 0.6
+            font.family: root.bar ? root.bar.fontFamily : Style.font.family
+            font.pixelSize: Style.font.bodySmall
+          }
+          Text {
+            textFormat: Text.PlainText
+            Layout.fillWidth: true
+            horizontalAlignment: Text.AlignRight
+            text: "JPEG, PNG, EXIF"
+            color: root.bar ? root.bar.foreground : Color.foreground
+            font.family: root.bar ? root.bar.fontFamily : Style.font.family
+            font.pixelSize: Style.font.bodySmall
+            elide: Text.ElideRight
+          }
         }
       }
 
@@ -249,4 +313,5 @@ Panel {
       }
     }
   }
-}
+
+  }
