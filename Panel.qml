@@ -30,7 +30,7 @@ Panel {
   }
 
   function cleanDownloads() {
-    cleanProc.command = ["bash", "-c", "for f in ~/Downloads/*.{jpg,jpeg,png}; do [[ -f \"$f\" ]] && \"" + root.resolveEnginePath() + "\" --clean \"$f\"; done"]
+    cleanProc.command = [root.resolveEnginePath(), "--clean-dir"]
     cleanProc.running = true
   }
 

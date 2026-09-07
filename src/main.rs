@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::fs;
-use std::io::{Read, Write};
+use std::io::Read;
 use std::path::{Path, PathBuf};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -191,6 +191,42 @@ fn main() {
 
     if args.iter().any(|a| a == "--json") {
         println!("{}", serde_json::to_string_pretty(&state).unwrap());
+        return;
+    }
+
+    if let Some(pos) = args.iter().position(|a| a == "--clean-dir") {
+        let target_dir = if pos + 1 < args.len() && !args[pos + 1].starts_with("--") {
+            PathBuf::from(&args[pos + 1])
+        } else {
+            let home = env::var("HOME").unwrap_or_else(|_| ".".to_string());
+            PathBuf::from(home).join("Downloads")
+        };
+
+        if target_dir.is_dir() {
+            if let Ok(entries) = fs::read_dir(&target_dir) {
+                for entry in entries.flatten() {
+                    let p = entry.path();
+                    if p.is_file() {
+                        if let Some(ext) = p.extension().and_then(|s| s.to_str()) {
+                            let ext_lower = ext.to_lowercase();
+                            if ext_lower == "jpg" || ext_lower == "jpeg" || ext_lower == "png" {
+                                if let Ok((orig, new_sz)) = clean_file(&p) {
+                                    state.total_cleaned += 1;
+                                    state.history.insert(0, CleanHistory {
+                                        file_name: p.file_name().unwrap_or_default().to_string_lossy().to_string(),
+                                        original_size: orig,
+                                        cleaned_size: new_sz,
+                                        timestamp: "Just now".to_string(),
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+                state.history.truncate(10);
+                save_state(&state);
+            }
+        }
         return;
     }
 
